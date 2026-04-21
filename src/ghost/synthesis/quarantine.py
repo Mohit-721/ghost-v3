@@ -7,6 +7,7 @@ Each tool has PEP 723 inline metadata for dependency management.
 Flow: forge → quarantine → user reviews → approve → registry
                                         → reject  → delete
 """
+
 import hashlib
 import logging
 import uuid
@@ -26,9 +27,15 @@ class QuarantineManager:
         self.quarantine_dir.mkdir(parents=True, exist_ok=True)
         self.writer = writer
 
-    async def add(self, name: str, description: str, code: str,
-                  dependencies: list[Any] | None = None, capabilities: list[str] | None = None,
-                  prompt_version: str = "v1") -> dict[str, Any]:
+    async def add(
+        self,
+        name: str,
+        description: str,
+        code: str,
+        dependencies: list[Any] | None = None,
+        capabilities: list[str] | None = None,
+        prompt_version: str = "v1",
+    ) -> dict[str, Any]:
         """
         Write a synthesized tool to quarantine.
 
@@ -95,8 +102,16 @@ if __name__ == "__main__":
             """INSERT INTO tools (id, name, version, description, file_path, source_hash,
                                   status, capabilities, prompt_version, ghost_api_version)
                VALUES (?, ?, 1, ?, ?, ?, 'quarantined', ?, ?, ?)""",
-            (tool_id, name, description, str(file_path), source_hash,
-             str(caps), prompt_version, VERSION)
+            (
+                tool_id,
+                name,
+                description,
+                str(file_path),
+                source_hash,
+                str(caps),
+                prompt_version,
+                VERSION,
+            ),
         )
 
         tool_info = {
@@ -123,8 +138,7 @@ if __name__ == "__main__":
     async def get(self, tool_id: str) -> dict[str, Any] | None:
         """Get a quarantined tool by ID."""
         cursor = await self.writer.db.execute(
-            "SELECT * FROM tools WHERE id = ? AND status = 'quarantined'",
-            (tool_id,)
+            "SELECT * FROM tools WHERE id = ? AND status = 'quarantined'", (tool_id,)
         )
         row = await cursor.fetchone()
         return dict(row) if row else None
@@ -133,7 +147,7 @@ if __name__ == "__main__":
         """Approve a tool — changes status to 'approved'."""
         await self.writer.write(
             "UPDATE tools SET status = 'approved' WHERE id = ? AND status = 'quarantined'",
-            (tool_id,)
+            (tool_id,),
         )
         # Return updated tool
         cursor = await self.writer.db.execute("SELECT * FROM tools WHERE id = ?", (tool_id,))
@@ -153,8 +167,7 @@ if __name__ == "__main__":
 
         # Remove from DB
         await self.writer.write(
-            "DELETE FROM tools WHERE id = ? AND status = 'quarantined'",
-            (tool_id,)
+            "DELETE FROM tools WHERE id = ? AND status = 'quarantined'", (tool_id,)
         )
 
         logger.info(f"Tool '{tool['name']}' rejected and deleted")

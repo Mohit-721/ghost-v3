@@ -7,6 +7,7 @@ Limits:
 
 Background tasks are tracked and cancelled cleanly on shutdown.
 """
+
 import asyncio
 import logging
 from collections.abc import Coroutine
@@ -56,9 +57,7 @@ class TaskManager:
             return
         exc = task.exception()
         if exc:
-            logger.exception(
-                f"Background task {task.get_name()!r} failed", exc_info=exc
-            )
+            logger.exception(f"Background task {task.get_name()!r} failed", exc_info=exc)
 
     async def shutdown(self) -> None:
         """Cancel all active tasks and wait for completion."""

@@ -7,6 +7,7 @@ Gathers relevant context for LLM requests:
 3. Merges via Reciprocal Rank Fusion
 4. Packs into token budget using provider-specific tokenizer
 """
+
 import logging
 from typing import Any
 
@@ -27,8 +28,7 @@ class ContextAssembler:
         self.counter = token_counter
         self.max_tokens = max_context_tokens
 
-    async def assemble(self, query: str, project_id: str,
-                       budget: int | None = None) -> str:
+    async def assemble(self, query: str, project_id: str, budget: int | None = None) -> str:
         """
         Assemble context for an LLM request.
 

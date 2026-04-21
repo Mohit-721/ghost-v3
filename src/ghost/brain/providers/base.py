@@ -8,6 +8,7 @@ Each provider implements structured_complete() using its NATIVE mechanism:
 
 Phase 1 only implements OpenAI. Anthropic + Google are Phase 3.
 """
+
 from typing import Any, Protocol, TypeVar, runtime_checkable
 
 from pydantic import BaseModel
@@ -68,12 +69,14 @@ class LLMProviderProtocol(Protocol):
 
 class CompletionUsage(BaseModel):
     """Token usage from a completion."""
+
     input_tokens: int
     output_tokens: int
 
 
 class CompletionResult(BaseModel):
     """Result from a standard completion."""
+
     content: str
     usage: CompletionUsage
     model: str

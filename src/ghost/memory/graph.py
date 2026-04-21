@@ -4,6 +4,7 @@ Edge CRUD and graph traversal.
 Edges connect entities with typed relationships.
 All edges are project-scoped implicitly (through their connected entities).
 """
+
 import json
 import logging
 import uuid
@@ -33,9 +34,7 @@ class GraphStore:
         )
         return edge_id
 
-    async def get_edges_from(
-        self, entity_id: str, relation: str | None = None
-    ) -> list[dict]:
+    async def get_edges_from(self, entity_id: str, relation: str | None = None) -> list[dict]:
         """Get all outgoing edges from an entity."""
         if relation:
             cursor = await self.db.execute(
@@ -49,9 +48,7 @@ class GraphStore:
             )
         return [dict(r) for r in await cursor.fetchall()]
 
-    async def get_edges_to(
-        self, entity_id: str, relation: str | None = None
-    ) -> list[dict]:
+    async def get_edges_to(self, entity_id: str, relation: str | None = None) -> list[dict]:
         """Get all incoming edges to an entity."""
         if relation:
             cursor = await self.db.execute(
@@ -65,9 +62,7 @@ class GraphStore:
             )
         return [dict(r) for r in await cursor.fetchall()]
 
-    async def get_neighbors(
-        self, entity_id: str, depth: int = 1, limit: int = 50
-    ) -> list[dict]:
+    async def get_neighbors(self, entity_id: str, depth: int = 1, limit: int = 50) -> list[dict]:
         """
         Get neighboring entities up to N hops away.
         Returns entities (not edges) with their shortest distance.
@@ -125,9 +120,7 @@ class GraphStore:
         )
         return len(result) if result else 0
 
-    async def search_related(
-        self, query: str, project_id: str, limit: int = 20
-    ) -> list[dict]:
+    async def search_related(self, query: str, project_id: str, limit: int = 20) -> list[dict]:
         """
         Find entities related to a query using FTS5 + graph expansion.
         1. FTS5 search for matching entities

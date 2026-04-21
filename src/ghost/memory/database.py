@@ -6,6 +6,7 @@ Key design decisions:
 - All pragmas applied on connection open
 - Integrity check on startup with automatic recovery (archive corrupt DB)
 """
+
 import logging
 import time
 from pathlib import Path

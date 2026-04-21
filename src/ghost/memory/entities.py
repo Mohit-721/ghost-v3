@@ -6,6 +6,7 @@ Entity kinds: "file", "function", "class", "module", "insight", "tool", "project
 All writes go through the DatabaseWriter.
 Reads happen directly on the db connection (WAL allows this).
 """
+
 import hashlib
 import json
 import logging
@@ -29,9 +30,7 @@ class EntityStore:
     ) -> str:
         """Create entity, return its ID."""
         entity_id = str(uuid.uuid4())
-        content_hash = (
-            hashlib.sha256(content.encode()).hexdigest() if content else None
-        )
+        content_hash = hashlib.sha256(content.encode()).hexdigest() if content else None
         meta_json = json.dumps(metadata or {})
 
         await self.writer.write(
@@ -50,9 +49,7 @@ class EntityStore:
         row = await cursor.fetchone()
         return dict(row) if row else None
 
-    async def get_by_name(
-        self, project_id: str, kind: str, name: str
-    ) -> dict | None:
+    async def get_by_name(self, project_id: str, kind: str, name: str) -> dict | None:
         """Get entity by project + kind + name. Returns None if not found."""
         cursor = await self.db.execute(
             """SELECT * FROM entities

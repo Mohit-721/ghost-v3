@@ -5,8 +5,6 @@ is the most natural place it applies (handler error isolation).
 These tests verify the pattern is correctly implemented even though senses/
 will build an explicit CircuitBreaker class in Phase 2.
 """
-import asyncio
-from collections import defaultdict
 
 import pytest
 
@@ -51,8 +49,6 @@ class CircuitBreaker:
     def _check_transition(self, now: float) -> None:
         """Transition OPEN → HALF_OPEN after open_duration elapsed."""
         if self._state == self.OPEN and self._opened_at is not None:
-            import time
-
             if now - self._opened_at >= self.open_duration:
                 self._state = self.HALF_OPEN
                 self._success_count = 0
@@ -98,6 +94,7 @@ class CircuitBreaker:
 
 
 # ─── Circuit Breaker Tests ────────────────────────────────────────────────────
+
 
 def test_initial_state_is_closed():
     cb = CircuitBreaker()
@@ -178,6 +175,7 @@ def test_half_open_failure_reopens():
 
 
 # ─── EventBus Handler Isolation (demonstrates circuit breaker need) ──────────
+
 
 @pytest.mark.asyncio
 async def test_eventbus_isolates_handler_failures():

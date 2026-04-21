@@ -4,6 +4,7 @@ Tool registry — versioned storage for approved tools.
 Supports multiple versions of the same tool name.
 Each tool name has a "current version" pointer.
 """
+
 import logging
 import shutil
 from pathlib import Path
@@ -29,9 +30,7 @@ class ToolRegistry:
         Copies the tool file from quarantine to tools dir.
         Updates the current version pointer.
         """
-        cursor = await self.db.execute(
-            "SELECT * FROM tools WHERE id = ?", (tool_id,)
-        )
+        cursor = await self.db.execute("SELECT * FROM tools WHERE id = ?", (tool_id,))
         tool_row = await cursor.fetchone()
         if not tool_row:
             return None
@@ -46,14 +45,14 @@ class ToolRegistry:
             # Update file_path
             await self.writer.write(
                 "UPDATE tools SET file_path = ?, status = 'registered' WHERE id = ?",
-                (str(dst), tool_id)
+                (str(dst), tool_id),
             )
 
         # Update current version pointer
         await self.writer.write(
             """INSERT OR REPLACE INTO tool_current (name, current_version_id)
                VALUES (?, ?)""",
-            (tool["name"], tool_id)
+            (tool["name"], tool_id),
         )
 
         logger.info(f"Tool '{tool['name']}' v{tool['version']} registered")
@@ -67,7 +66,7 @@ class ToolRegistry:
             """SELECT t.* FROM tools t
                JOIN tool_current tc ON t.id = tc.current_version_id
                WHERE tc.name = ?""",
-            (name,)
+            (name,),
         )
         row = await cursor.fetchone()
         return dict(row) if row else None
@@ -82,13 +81,10 @@ class ToolRegistry:
         """List all tools, optionally filtered by status."""
         if status:
             cursor = await self.db.execute(
-                "SELECT * FROM tools WHERE status = ? ORDER BY name, version DESC",
-                (status,)
+                "SELECT * FROM tools WHERE status = ? ORDER BY name, version DESC", (status,)
             )
         else:
-            cursor = await self.db.execute(
-                "SELECT * FROM tools ORDER BY name, version DESC"
-            )
+            cursor = await self.db.execute("SELECT * FROM tools ORDER BY name, version DESC")
         return [dict(r) for r in await cursor.fetchall()]
 
     async def record_run(self, tool_id: str) -> None:
@@ -96,7 +92,7 @@ class ToolRegistry:
         await self.writer.write(
             """UPDATE tools SET runs = runs + 1, last_run_at = datetime('now')
                WHERE id = ?""",
-            (tool_id,)
+            (tool_id,),
         )
 
     async def delete(self, tool_id: str) -> bool:
@@ -111,10 +107,7 @@ class ToolRegistry:
             file_path.unlink()
 
         # Remove current version pointer if this is the current version
-        await self.writer.write(
-            "DELETE FROM tool_current WHERE current_version_id = ?",
-            (tool_id,)
-        )
+        await self.writer.write("DELETE FROM tool_current WHERE current_version_id = ?", (tool_id,))
 
         # Delete DB record
         await self.writer.write("DELETE FROM tools WHERE id = ?", (tool_id,))
@@ -125,7 +118,6 @@ class ToolRegistry:
     async def get_versions(self, name: str) -> list[dict[str, Any]]:
         """Get all versions of a tool by name."""
         cursor = await self.db.execute(
-            "SELECT * FROM tools WHERE name = ? ORDER BY version DESC",
-            (name,)
+            "SELECT * FROM tools WHERE name = ? ORDER BY version DESC", (name,)
         )
         return [dict(r) for r in await cursor.fetchall()]

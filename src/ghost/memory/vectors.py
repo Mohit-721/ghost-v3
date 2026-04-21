@@ -4,6 +4,7 @@ Vector storage and similarity search.
 Uses sqlite-vec if available, gracefully falls back to no vector search.
 When sqlite-vec is unavailable, search.py falls back to FTS5-only.
 """
+
 import json
 import logging
 
@@ -52,9 +53,7 @@ class VectorStore:
             (entity_id, json.dumps(embedding)),
         )
 
-    async def search(
-        self, query_embedding: list[float], limit: int = 20
-    ) -> list[dict]:
+    async def search(self, query_embedding: list[float], limit: int = 20) -> list[dict]:
         """Find nearest neighbors by cosine similarity."""
         if not self.available:
             return []

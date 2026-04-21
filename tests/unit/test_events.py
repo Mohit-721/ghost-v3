@@ -1,7 +1,9 @@
 """
 Unit tests for ghost.core.events.EventBus.
 """
+
 import asyncio
+from datetime import UTC
 
 import pytest
 
@@ -14,6 +16,7 @@ def bus() -> EventBus:
 
 
 # ─── Subscribe + Publish ──────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_subscribe_publish_calls_handler(bus):
@@ -142,9 +145,8 @@ async def test_unsubscribe_removes_handler(bus):
 @pytest.mark.asyncio
 async def test_event_has_auto_uuid_and_timestamp(bus):
     """Published Event has a non-empty UUID id and a timezone-aware timestamp."""
-    from datetime import timezone
 
     event = await bus.publish("test.meta", {})
     assert event.id and len(event.id) == 36  # UUID4 format
     assert event.timestamp.tzinfo is not None
-    assert event.timestamp.tzinfo == timezone.utc
+    assert event.timestamp.tzinfo == UTC

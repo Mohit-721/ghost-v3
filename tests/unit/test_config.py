@@ -1,24 +1,19 @@
 """
 Unit tests for ghost.config.schema and ghost.config.loader.
 """
-import os
-from pathlib import Path
 
-import pytest
-from pydantic import ValidationError
+from pathlib import Path
 
 from ghost.config.schema import (
     GhostConfig,
     LLMConfig,
     LLMProvider,
-    SandboxConfig,
     SecretConfig,
     TierConfig,
-    WatchConfig,
 )
 
-
 # ─── GhostConfig ──────────────────────────────────────────────────────────────
+
 
 def make_default_config() -> GhostConfig:
     return GhostConfig(
@@ -66,6 +61,7 @@ def test_ghost_config_sandbox_defaults():
         DEFAULT_MAX_OUTPUT_BYTES,
         DEFAULT_MEMORY_LIMIT_MB,
     )
+
     config = make_default_config()
     assert config.sandbox.exec_timeout_seconds == DEFAULT_EXEC_TIMEOUT
     assert config.sandbox.install_timeout_seconds == DEFAULT_INSTALL_TIMEOUT
@@ -106,6 +102,7 @@ def test_ghost_config_serialization_round_trip():
 
 # ─── LLMProvider ──────────────────────────────────────────────────────────────
 
+
 def test_llm_provider_enum_values():
     """LLMProvider enum has the correct string values."""
     assert LLMProvider.OPENAI.value == "openai"
@@ -122,6 +119,7 @@ def test_tier_config_defaults():
 
 
 # ─── SecretConfig ─────────────────────────────────────────────────────────────
+
 
 def test_secret_config_loads_from_env(monkeypatch, tmp_path):
     """SecretConfig picks up env vars."""

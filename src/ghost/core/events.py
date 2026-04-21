@@ -9,6 +9,7 @@ Uses deque(maxlen=500) instead of an unbounded list for history.
 An unbounded list causes memory spikes during event storms where
 thousands of high-frequency fs.changed events can accumulate.
 """
+
 import asyncio
 import logging
 import uuid
@@ -28,9 +29,7 @@ class Event:
     topic: str
     payload: dict[str, Any] = field(default_factory=dict)
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: datetime = field(
-        default_factory=lambda: datetime.now(UTC)
-    )
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     causation_id: str | None = None
 
 
@@ -60,9 +59,7 @@ class EventBus:
     def unsubscribe(self, topic: str, handler: EventHandler) -> None:
         """Remove a handler from a topic."""
         if topic in self._handlers:
-            self._handlers[topic] = [
-                h for h in self._handlers[topic] if h != handler
-            ]
+            self._handlers[topic] = [h for h in self._handlers[topic] if h != handler]
 
     async def publish(
         self,
@@ -111,9 +108,7 @@ class EventBus:
         try:
             await handler(event)
         except Exception:
-            logger.exception(
-                f"Handler {handler.__name__!r} failed for event '{event.topic}'"
-            )
+            logger.exception(f"Handler {handler.__name__!r} failed for event '{event.topic}'")
 
     async def drain(self) -> None:
         """Wait for all active handler tasks to complete."""
@@ -128,7 +123,4 @@ class EventBus:
     @property
     def handler_count(self) -> dict[str, int]:
         """Number of handlers per topic."""
-        return {
-            topic: len(handlers)
-            for topic, handlers in self._handlers.items()
-        }
+        return {topic: len(handlers) for topic, handlers in self._handlers.items()}
