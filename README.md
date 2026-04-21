@@ -34,7 +34,7 @@
 
 ---
 
-## 📖 Overview
+## Overview
 
 **Ghost** is not another LLM wrapper or chatbot CLI. It is a fully autonomous background daemon (`ghostd`) that bridges the gap between natural language intents and concrete, repeatable file-system operations.
 
@@ -51,7 +51,7 @@ Ghost runs over **Unix Domain Sockets** (no open ports), writes to a **single SQ
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 ```
 ┌──────────┐     sync httpx      ┌──────────────────────────────────────┐
@@ -95,7 +95,7 @@ Ghost runs over **Unix Domain Sockets** (no open ports), writes to a **single SQ
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 
@@ -157,7 +157,7 @@ ghost status    # Shows daemon health, memory, active tasks
 
 ---
 
-## 🛠️ CLI Command Reference
+## CLI Command Reference
 
 ### Daemon Lifecycle
 
@@ -211,7 +211,7 @@ ghost status    # Shows daemon health, memory, active tasks
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 Ghost is built in three architectural layers, each with clearly separated concerns:
 
@@ -257,7 +257,7 @@ The entry points that users and systems interact with.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ghost-v3/
@@ -373,7 +373,7 @@ ghost-v3/
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### `~/.ghost/config.toml`
 
@@ -452,7 +452,7 @@ Ghost uses a single SQLite database (`~/.ghost/ghost.db`) with WAL mode.
 
 ---
 
-## 🔒 Security Model
+## Security Model
 
 ### Sandbox Isolation
 
@@ -475,7 +475,7 @@ All synthesized tools must pass through quarantine. No LLM-generated code execut
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -512,7 +512,7 @@ make typecheck
 
 ---
 
-## 🔧 Development
+## Development
 
 ### Local Development
 
@@ -547,7 +547,7 @@ tail -f ~/.ghost/logs/ghostd.log
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 ### Phase 1 ✅ (Current)
 Core infrastructure, brain, synthesis, daemon, CLI, and API — all implemented and tested.
