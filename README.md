@@ -6,7 +6,7 @@
 
 ---
 
-## 📖 Overview
+## Overview
 
 **Ghost** is not just another LLM wrapper or static CLI tool. It is a fully autonomous, local-first daemon (`ghostd`) that operates continuously in the background of your operating system. Ghost acts as an ambient intelligent agent, bridging the gap between natural language requests and concrete file-system execution.
 
@@ -14,26 +14,26 @@ When you ask Ghost to accomplish a task, it doesn't just give you a code snippet
 
 By heavily relying on `uv` for seamless, ephemeral dependency management (PEP 723) and utilizing a robust SQLite-backed Knowledge Graph for persistent memory, Ghost effectively learns your environment and handles repetitive engineering tasks securely and autonomously.
 
-## ✨ Core Capabilities
+## Core Capabilities
 
-### 🧠 Autonomous Tool Forging
+### Autonomous Tool Forging
 Ghost interprets natural language intents into fully functional, rigorously typed Python scripts. Through its internal "Brain" hierarchy, it leverages tier-based routing (e.g., using `gpt-4o-mini` for triage and `gpt-4o` for complex analysis) to generate context-aware executable tools on the fly. 
 
-### 🛡️ Secure Execution & Sandboxing
+### Secure Execution & Sandboxing
 Security is paramount when allowing an AI to execute code on your machine. Ghost utilizes POSIX resource limits (`setrlimit`) to strict-bind CPU and memory allocation. All synthesized tools are run within isolated, ephemeral directories via `uv run`, completely stripping ambient API keys and environmental variables to prevent supply-chain leakage.
 
-### 🚦 The Quarantine Lifecycle
+### The Quarantine Lifecycle
 Ghost employs a stringent human-in-the-loop safety mechanism. Newly minted tools are placed in **Quarantine**. They cannot be executed until explicitly reviewed and approved by the user. Once approved, they are promoted to the active Registry and can be executed synchronously.
 
-### 🕸️ Semantic Memory & Knowledge Graph
+### Semantic Memory & Knowledge Graph
 Ghost persistently records its actions and context. Utilizing `sqlite-vec` alongside Full-Text Search (FTS5), Ghost builds a highly interconnected Knowledge Graph. Entities and edges map out your file system and workflows, allowing Ghost to assemble rich context payloads through Reciprocal Rank Fusion (RRF) before it ever talks to an external LLM.
 
-### 🔄 Resilient Asynchronous Architecture
+### Resilient Asynchronous Architecture
 The daemon operates via Unix Domain Sockets (UDS) to prevent external port bindings. To safely guarantee SQLite concurrency without encountering `database is locked` states, Ghost processes all writes through a strictly sequential Single-Writer concurrent queue.
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 Ghost v3.0 is constructed across three primary internal layers:
 
@@ -53,7 +53,7 @@ Ghost v3.0 is constructed across three primary internal layers:
 
 ---
 
-## 🚀 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 - Operating System: Linux or macOS (Ghost utilizes POSIX-specific APIs).
@@ -91,7 +91,7 @@ OPENAI_API_KEY=sk-xxxx...
 
 ---
 
-## 📖 Operational Guide
+## Operational Guide
 
 ### Managing the Background Daemon
 Ghost functions asynchronously. The CLI endpoints communicate with the daemon, which must be running to process requests.
@@ -135,11 +135,11 @@ ghost logs      # View live stream of all audit events
 
 ---
 
-## 💡 Developer Extensibility
+## Developer Extensibility
 
 Because Ghost isolates tool execution, developers can directly write and place their own `PEP 723` scripts into the `~/.ghost/tools/` registry directory. Ghost will automatically index and parse inline dependencies `/// script requires = ["requests"] ///` allowing infinite user-generated extensibilities outside of the LLM pipeline.
 
-## 🔒 Security Best Practices
+## Security Best Practices
 Ghost is designed with guardrails; however, you are executing AI-generated logic directly on your file system. 
 1. **Always physically review** code when it sits in `ghost tools list --status quarantined`.
 2. Do not run Ghost as a `root` user or under `sudo`. 
