@@ -4,6 +4,7 @@ Ghost configuration schema — Pydantic v2 models.
 Config is loaded from ~/.ghost/config.toml.
 API keys are loaded from ~/.ghost/.env via SecretConfig (pydantic-settings).
 """
+
 from enum import StrEnum
 from pathlib import Path
 
@@ -63,12 +64,8 @@ class GhostConfig(BaseModel):
 
     version: int = 1
     ghost_home: Path = Field(default_factory=lambda: Path.home() / ".ghost")
-    socket_path: Path = Field(
-        default_factory=lambda: Path.home() / ".ghost" / "ghost.sock"
-    )
-    db_path: Path = Field(
-        default_factory=lambda: Path.home() / ".ghost" / "ghost.db"
-    )
+    socket_path: Path = Field(default_factory=lambda: Path.home() / ".ghost" / "ghost.sock")
+    db_path: Path = Field(default_factory=lambda: Path.home() / ".ghost" / "ghost.db")
     llm: LLMConfig
     watch: WatchConfig = Field(default_factory=WatchConfig)
     sandbox: SandboxConfig = Field(default_factory=SandboxConfig)

@@ -4,6 +4,7 @@ Cost tracking and provider-specific token counting.
 A "token" is NOT a universal unit — each provider tokenizes differently.
 This module handles the correct tokenizer for each provider.
 """
+
 import logging
 from typing import Any
 
@@ -38,8 +39,7 @@ class TokenCounter:
         if self.provider == "anthropic" and self._client:
             try:
                 result = self._client.messages.count_tokens(
-                    model=self.model,
-                    messages=[{"role": "user", "content": text}]
+                    model=self.model, messages=[{"role": "user", "content": text}]
                 )
                 return result.input_tokens
             except Exception:
@@ -74,8 +74,7 @@ class CostMeter:
         self._session_output_tokens: int = 0
         self._session_calls: int = 0
 
-    def record(self, model: str, input_tokens: int, output_tokens: int,
-               purpose: str) -> float:
+    def record(self, model: str, input_tokens: int, output_tokens: int, purpose: str) -> float:
         """
         Record a cost entry. Returns the cost in USD.
 
@@ -95,7 +94,7 @@ class CostMeter:
             "INSERT INTO cost_records "
             "(model, input_tokens, output_tokens, cost_usd, purpose, session_id) "
             "VALUES (?, ?, ?, ?, ?, ?)",
-            (model, input_tokens, output_tokens, cost_usd, purpose, self.session_id)
+            (model, input_tokens, output_tokens, cost_usd, purpose, self.session_id),
         )
 
         # Update session totals

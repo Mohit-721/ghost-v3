@@ -3,6 +3,7 @@ Config loader: TOML file → GhostConfig.
 
 Priority: config.toml → environment variables → defaults.
 """
+
 from __future__ import annotations
 
 import logging
@@ -14,7 +15,6 @@ if TYPE_CHECKING:
     from ghost.config.schema import GhostConfig
 
 logger = logging.getLogger(__name__)
-
 
 
 def load_config(config_path: Path | None = None) -> GhostConfig:

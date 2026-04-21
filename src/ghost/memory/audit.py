@@ -6,6 +6,7 @@ Examples: "tool forged", "entity created", "insight generated".
 
 All writes go through DatabaseWriter (fire-and-forget).
 """
+
 import json
 import logging
 import uuid

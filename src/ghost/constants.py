@@ -36,10 +36,10 @@ UDS_PATH_LIMIT_MACOS = 104
 DB_PRAGMAS = {
     "journal_mode": "WAL",
     "synchronous": "NORMAL",
-    "cache_size": -64000,      # 64MB
+    "cache_size": -64000,  # 64MB
     "foreign_keys": True,
     "temp_store": "MEMORY",
-    "mmap_size": 268435456,    # 256MB
+    "mmap_size": 268435456,  # 256MB
 }
 
 # ─── Concurrency ────────────────────────────────────────────────────────────
@@ -47,13 +47,13 @@ MAX_CONCURRENT_LLM_CALLS = 2
 MAX_CONCURRENT_EXEC = 1
 
 # ─── Sandbox Defaults ───────────────────────────────────────────────────────
-DEFAULT_EXEC_TIMEOUT = 30       # seconds
-DEFAULT_INSTALL_TIMEOUT = 120   # seconds (for uv first-run)
+DEFAULT_EXEC_TIMEOUT = 30  # seconds
+DEFAULT_INSTALL_TIMEOUT = 120  # seconds (for uv first-run)
 DEFAULT_MEMORY_LIMIT_MB = 256
 DEFAULT_MAX_OUTPUT_BYTES = 1_048_576  # 1MB
 
 # ─── Logging ────────────────────────────────────────────────────────────────
-LOG_MAX_BYTES = 5_000_000       # 5MB per log file
+LOG_MAX_BYTES = 5_000_000  # 5MB per log file
 LOG_BACKUP_COUNT = 3
 LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 
@@ -107,6 +107,7 @@ ALWAYS_IGNORE = {
     ".DS_Store",
     "Thumbs.db",
 }
+
 
 # ─── Event Topics ───────────────────────────────────────────────────────────
 # Namespaced event topics for the EventBus

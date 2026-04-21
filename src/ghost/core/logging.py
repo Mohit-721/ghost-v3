@@ -13,6 +13,7 @@ Edge case from final_bug_sweep.md:
 QueueHandler + QueueListener ensure log rotation (file I/O) never blocks
 the asyncio event loop — even during log bursts or slow disk flushes.
 """
+
 import logging
 import queue
 from logging.handlers import QueueHandler, QueueListener, RotatingFileHandler

@@ -7,6 +7,7 @@ Orchestrates the full tool synthesis pipeline:
 3. Write generated tool to quarantine
 4. Return tool metadata for user review
 """
+
 import logging
 from typing import Any
 
@@ -20,14 +21,17 @@ logger = logging.getLogger(__name__)
 
 # ─── Structured Output Models ──────────────────────────────────────────────
 
+
 class ToolDependency(BaseModel):
     """A Python package dependency."""
+
     name: str
     version_spec: str = ""  # e.g., ">=2.31"
 
 
 class ToolSynthesisResponse(BaseModel):
     """Structured response from the LLM for tool generation."""
+
     name: str = Field(description="Snake_case tool name")
     description: str = Field(description="What the tool does (1-2 sentences)")
     dependencies: list[ToolDependency] = Field(default_factory=list)
@@ -36,6 +40,7 @@ class ToolSynthesisResponse(BaseModel):
 
 
 # ─── Forge ─────────────────────────────────────────────────────────────────
+
 
 class ToolForge:
     """Synthesizes tools from natural language intents."""
@@ -73,8 +78,7 @@ class ToolForge:
 
         # Publish event
         await self.events.publish(
-            Topics.FORGE_REQUESTED,
-            {"intent": intent, "project_id": project_id}
+            Topics.FORGE_REQUESTED, {"intent": intent, "project_id": project_id}
         )
 
         try:
@@ -128,11 +132,14 @@ class ToolForge:
             )
 
             # Step 6: Audit log
-            self.audit.log(Topics.FORGE_COMPLETED, {
-                "tool_id": tool_info["id"],
-                "name": result.name,
-                "intent": intent[:200],
-            })
+            self.audit.log(
+                Topics.FORGE_COMPLETED,
+                {
+                    "tool_id": tool_info["id"],
+                    "name": result.name,
+                    "intent": intent[:200],
+                },
+            )
 
             # Step 7: Publish completion event
             await self.events.publish(Topics.FORGE_COMPLETED, tool_info)

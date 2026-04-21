@@ -1,10 +1,5 @@
 """Shared test fixtures for Ghost test suite."""
 
-import asyncio
-import tempfile
-from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock
-
 import pytest
 
 
@@ -25,7 +20,7 @@ def tmp_project_dir(tmp_path):
     project = tmp_path / "test-project"
     project.mkdir()
     (project / "main.py").write_text('print("hello")\n')
-    (project / "utils.py").write_text('def helper(): pass\n')
+    (project / "utils.py").write_text("def helper(): pass\n")
     (project / "README.md").write_text("# Test Project\n")
     return project
 

@@ -8,6 +8,7 @@ Security:
 - Resource limits via POSIX setrlimit
 - Timeout enforced
 """
+
 import logging
 import resource
 import shutil
@@ -24,6 +25,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ExecutionResult:
     """Result from tool execution."""
+
     exit_code: int
     stdout: str
     stderr: str
@@ -41,8 +43,9 @@ class ToolExecutor:
         self.max_output = config.max_output_bytes
         self._has_uv = shutil.which("uv") is not None and config.prefer_uv
 
-    async def execute(self, tool_path: Path, args: list[str] | None = None,
-                      project_dir: Path | None = None) -> ExecutionResult:
+    async def execute(
+        self, tool_path: Path, args: list[str] | None = None, project_dir: Path | None = None
+    ) -> ExecutionResult:
         """
         Run a tool in an isolated subprocess.
 
@@ -69,8 +72,8 @@ class ToolExecutor:
                 )
                 return ExecutionResult(
                     exit_code=result.returncode,
-                    stdout=result.stdout[:self.max_output],
-                    stderr=result.stderr[:self.max_output],
+                    stdout=result.stdout[: self.max_output],
+                    stderr=result.stderr[: self.max_output],
                     timed_out=False,
                     used_uv=self._has_uv,
                 )

@@ -6,6 +6,7 @@ Tiers:
 - Tier 2: Tool synthesis, triage (mid-range: gpt-4o-mini)
 - Tier 3: Complex analysis (high-end: gpt-4o)
 """
+
 import logging
 from typing import Any
 
@@ -96,5 +97,5 @@ class ModelRouter:
     async def close(self) -> None:
         """Close all provider connections."""
         for provider in self._providers.values():
-            if hasattr(provider, 'close'):
+            if hasattr(provider, "close"):
                 await provider.close()

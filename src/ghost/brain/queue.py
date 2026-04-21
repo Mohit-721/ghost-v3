@@ -4,6 +4,7 @@ Intent queue — buffer for LLM requests when the API is unavailable.
 When the LLM returns 429/503/timeout, intents are queued in SQLite
 and drained when the API becomes available again.
 """
+
 import json
 import logging
 import uuid
@@ -29,8 +30,7 @@ class IntentQueue:
         """
         intent_id = str(uuid.uuid4())
         await self.writer.write(
-            "INSERT INTO intent_queue (id, payload) VALUES (?, ?)",
-            (intent_id, json.dumps(payload))
+            "INSERT INTO intent_queue (id, payload) VALUES (?, ?)", (intent_id, json.dumps(payload))
         )
         payload_type = payload.get("type", "unknown")
         logger.info(f"Intent queued: {intent_id} (type: {payload_type})")
@@ -43,7 +43,7 @@ class IntentQueue:
                WHERE status = 'pending'
                ORDER BY created_at ASC
                LIMIT ?""",
-            (limit,)
+            (limit,),
         )
         rows = await cursor.fetchall()
         results = []
@@ -59,7 +59,7 @@ class IntentQueue:
             """UPDATE intent_queue
                SET status = 'completed', completed_at = datetime('now')
                WHERE id = ?""",
-            (intent_id,)
+            (intent_id,),
         )
 
     async def mark_failed(self, intent_id: str, error: str) -> None:
@@ -68,14 +68,12 @@ class IntentQueue:
             """UPDATE intent_queue
                SET status = 'failed', error = ?, completed_at = datetime('now')
                WHERE id = ?""",
-            (error, intent_id)
+            (error, intent_id),
         )
 
     async def pending_count(self) -> int:
         """Number of pending intents."""
-        cursor = await self.db.execute(
-            "SELECT COUNT(*) FROM intent_queue WHERE status = 'pending'"
-        )
+        cursor = await self.db.execute("SELECT COUNT(*) FROM intent_queue WHERE status = 'pending'")
         row = await cursor.fetchone()
         return row[0]
 

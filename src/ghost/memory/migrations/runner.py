@@ -4,6 +4,7 @@ Database schema migration runner.
 Reads .sql files from the migrations directory and applies them
 in order, tracking which have been applied via the schema_version table.
 """
+
 import logging
 from pathlib import Path
 
@@ -34,9 +35,7 @@ async def run_migrations(writer: "DatabaseWriter") -> None:  # noqa: F821
     )
 
     # Get current version — reads go directly to db (WAL allows concurrent reads)
-    cursor = await writer.db.execute(
-        "SELECT COALESCE(MAX(version), 0) FROM schema_version"
-    )
+    cursor = await writer.db.execute("SELECT COALESCE(MAX(version), 0) FROM schema_version")
     row = await cursor.fetchone()
     current_version = row[0]
 

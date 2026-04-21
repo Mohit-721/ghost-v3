@@ -2,9 +2,7 @@
 Unit tests for ghost.memory.entities.EntityStore and ghost.memory.graph.GraphStore.
 Tests both entity CRUD and graph traversal + FTS search.
 """
-import asyncio
 
-import aiosqlite
 import pytest
 
 from ghost.memory.database import get_connection
@@ -45,6 +43,7 @@ async def store(tmp_path):
 
 
 # ─── EntityStore ──────────────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_create_and_get_entity(store):
@@ -149,13 +148,14 @@ async def test_list_by_project_filters_by_kind(store):
 
 # ─── GraphStore — Edges ───────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_add_and_get_edges_from(store):
     """add_edge creates edge; get_edges_from returns it."""
     entities, graph, _ = store
     id_a = await entities.create("p1", "file", "a.py")
     id_b = await entities.create("p1", "file", "b.py")
-    edge_id = await graph.add_edge(id_a, id_b, "imports")
+    await graph.add_edge(id_a, id_b, "imports")
 
     edges = await graph.get_edges_from(id_a)
     assert len(edges) == 1
@@ -195,6 +195,7 @@ async def test_get_neighbors_one_hop(store):
 
 # ─── FTS5 Search (Bug #1 validation) ─────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_fts_search_returns_matching_entities(store):
     """FTS5 triggers (Bug #1 fix) ensure new entities are immediately searchable."""
@@ -213,6 +214,7 @@ async def test_fts_search_returns_matching_entities(store):
     )
 
     from ghost.memory.search import UnifiedSearch
+
     search = UnifiedSearch(entities.db, graph)
 
     results = await search.search("calculate interest", "proj-fts")

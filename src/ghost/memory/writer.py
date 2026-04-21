@@ -17,6 +17,7 @@ Consumer uses `while True` + sentinel-only exit, NOT
 `while self._running or not self._queue.empty()` which has a race condition
 where items enqueued during shutdown are silently dropped.
 """
+
 import asyncio
 import logging
 from dataclasses import dataclass, field

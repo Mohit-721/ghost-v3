@@ -1,6 +1,7 @@
 """
 Unit tests for ghost.memory.writer.DatabaseWriter.
 """
+
 import asyncio
 
 import aiosqlite
@@ -14,9 +15,7 @@ async def db_and_writer(tmp_path):
     """Create an in-memory SQLite DB and a started DatabaseWriter."""
     db = await aiosqlite.connect(":memory:")
     db.row_factory = aiosqlite.Row
-    await db.execute(
-        "CREATE TABLE test (id INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)"
-    )
+    await db.execute("CREATE TABLE test (id INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)")
     await db.commit()
     writer = DatabaseWriter(db)
     await writer.start()
@@ -26,6 +25,7 @@ async def db_and_writer(tmp_path):
 
 
 # ─── Basic Write ──────────────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_write_returns_result(db_and_writer):
@@ -48,6 +48,7 @@ async def test_write_data_persists(db_and_writer):
 
 # ─── Fire-and-Forget ─────────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_enqueue_is_fire_and_forget(db_and_writer):
     """enqueue() does not block — call returns immediately."""
@@ -63,14 +64,13 @@ async def test_enqueue_is_fire_and_forget(db_and_writer):
 
 # ─── Concurrent Safety ────────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_multiple_concurrent_writes_are_serialized(db_and_writer):
     """Multiple concurrent write() calls all succeed without corruption."""
     db, writer = db_and_writer
     tasks = [
-        asyncio.create_task(
-            writer.write("INSERT INTO test (val) VALUES (?)", (f"item_{i}",))
-        )
+        asyncio.create_task(writer.write("INSERT INTO test (val) VALUES (?)", (f"item_{i}",)))
         for i in range(20)
     ]
     await asyncio.gather(*tasks)
@@ -81,14 +81,13 @@ async def test_multiple_concurrent_writes_are_serialized(db_and_writer):
 
 # ─── Shutdown ─────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_stop_drains_pending_writes():
     """stop() drains all pending writes before exiting (Bug #2 fix)."""
     db = await aiosqlite.connect(":memory:")
     db.row_factory = aiosqlite.Row
-    await db.execute(
-        "CREATE TABLE test (id INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)"
-    )
+    await db.execute("CREATE TABLE test (id INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)")
     await db.commit()
     writer = DatabaseWriter(db)
     await writer.start()
@@ -109,6 +108,7 @@ async def test_stop_drains_pending_writes():
 
 # ─── Error Handling ───────────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_exception_in_write_sets_future_exception(db_and_writer):
     """A bad SQL propagates as an exception to the awaiting caller."""
@@ -120,7 +120,6 @@ async def test_exception_in_write_sets_future_exception(db_and_writer):
 @pytest.mark.asyncio
 async def test_enqueue_exception_is_logged_not_raised(db_and_writer, caplog):
     """A bad SQL passed via enqueue() is logged but doesn't crash the bus."""
-    import logging
 
     db, writer = db_and_writer
     writer.enqueue("INSERT INTO nonexistent_table (x) VALUES (?)", ("x",))
@@ -130,6 +129,7 @@ async def test_enqueue_exception_is_logged_not_raised(db_and_writer, caplog):
 
 
 # ─── Sentinel / Bug #2 ───────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_sentinel_stops_consumer():
@@ -149,14 +149,13 @@ async def test_sentinel_stops_consumer():
 
 # ─── Pending Count ────────────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_pending_count_reflects_queue_size():
     """pending_count reflects the number of items currently in the queue."""
     db = await aiosqlite.connect(":memory:")
     db.row_factory = aiosqlite.Row
-    await db.execute(
-        "CREATE TABLE test (id INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)"
-    )
+    await db.execute("CREATE TABLE test (id INTEGER PRIMARY KEY AUTOINCREMENT, val TEXT)")
     await db.commit()
 
     writer = DatabaseWriter(db)
